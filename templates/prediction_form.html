@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Heart Stroke Risk Assessment</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">
+                    Please provide accurate information to receive the most precise risk assessment and personalized recommendations.
+                </p>
+                <form method="POST" action="{{ url_for('prediction_form') }}">
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+                        <div class="form-text">Enter your current age in years.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Hypertension (High Blood Pressure)</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="hypertension" id="hypertension_yes" value="1" required>
+                            <label class="form-check-label" for="hypertension_yes">
+                                Yes, I have been diagnosed with hypertension
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="hypertension" id="hypertension_no" value="0">
+                            <label class="form-check-label" for="hypertension_no">
+                                No, I don't have hypertension
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="glucose_level" class="form-label">Glucose Level (mg/dL)</label>
+                        <input type="number" class="form-control" id="glucose_level" name="glucose_level" min="50" step="0.1" required>
+                        <div class="form-text">
+                            Enter your fasting blood glucose level. Normal range is typically 70-100 mg/dL.
+                            If you don't know your exact level, you can use an estimate based on your most recent test.
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-heartbeat me-2"></i>
+                            Calculate Stroke Risk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row my-5 align-items-center">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-bold">HeartGuard: Stroke Risk & Rescue</h1>
+        <p class="lead">
+            Your personal heart health guardian - assess your stroke risk and get personalized recommendations.
+        </p>
+        <p>
+            Heart stroke is a leading cause of mortality worldwide. With HeartGuard, you can:
+        </p>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item bg-transparent">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Assess your stroke risk quickly
+            </li>
+            <li class="list-group-item bg-transparent">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Get personalized health recommendations
+            </li>
+            <li class="list-group-item bg-transparent">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Connect with specialized doctors in your area
+            </li>
+            <li class="list-group-item bg-transparent">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                Track your health progress over time
+            </li>
+        </ul>
+
+        {% if not session.get('user_id') %}
+        <div class="d-grid gap-2 d-md-flex">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-md-2">
+                <i class="fas fa-user-plus me-1"></i> Register
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-sign-in-alt me-1"></i> Login
+            </a>
+        </div>
+        {% else %}
+            {% if session.get('user_type') == 'user' %}
+            <div class="d-grid gap-2 d-md-flex">
+                <a href="{{ url_for('prediction_form') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-heartbeat me-1"></i> Check Your Risk Now
+                </a>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="col-md-6 text-center">
+        <svg class="img-fluid" width="500" height="350" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 350">
+            <!-- Heart & Health Illustration -->
+            <path d="M250,75 C250,75 220,30 170,30 C120,30 80,75 80,130 C80,200 250,290 250,290 C250,290 420,200 420,130 C420,75 380,30 330,30 C280,30 250,75 250,75 Z" fill="#b91c1c" stroke="#ffffff" stroke-width="5"/>
+            <path d="M110,130 L150,170 L190,130 L230,170 L270,130 L310,170 L350,130 L390,170" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="250" cy="180" r="70" fill="#1a1a1a" stroke="#ffffff" stroke-width="3"/>
+            <text x="250" y="185" font-family="Arial" font-size="14" text-anchor="middle" fill="#ffffff">HEART HEALTH</text>
+        </svg>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How It Works</h2>
+    </div>
+</div>
+
+<div class="row text-center g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">1. Complete Assessment</h3>
+                <p class="card-text">Answer a few simple questions about your age, hypertension status, and glucose levels.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="fas fa-chart-bar fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">2. Get Your Results</h3>
+                <p class="card-text">Our AI-powered model will analyze your data and provide a risk assessment immediately.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                <h3 class="card-title">3. Take Action</h3>
+                <p class="card-text">Receive personalized health recommendations and connect with doctors in your area.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

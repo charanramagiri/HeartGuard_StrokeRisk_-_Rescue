@@ -1,0 +1,72 @@
+/* Additional custom styles beyond Bootstrap */
+
+/* Body and general styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Custom card styles */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    font-weight: 500;
+}
+
+/* Icon styles */
+.icon-square {
+    border-radius: 0.75rem;
+}
+
+/* Health risk indicators */
+.risk-indicator {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* Custom alert styles */
+.alert {
+    border-radius: 10px;
+}
+
+/* List item styling */
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+/* Footer styling */
+.footer {
+    margin-top: auto;
+}
+
+/* Button hover effects */
+.btn:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+}
+
+/* Form control focus */
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+}

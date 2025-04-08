@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Doctor Registration</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('doctor_register') }}">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   required minlength="8">
+                            <div class="form-text">Password must be at least 8 characters long.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                                   required minlength="8">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">City/Location</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                            <div class="form-text">Your primary practice location.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="specialty" class="form-label">Medical Specialty</label>
+                            <select class="form-select" id="specialty" name="specialty" required>
+                                <option value="" selected disabled>Select specialty</option>
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Internal Medicine">Internal Medicine</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="General Practice">General Practice</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-info">Register</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Already have an account? <a href="{{ url_for('doctor_login') }}">Login now</a></p>
+                <p class="mt-2 mb-0">Are you a patient? <a href="{{ url_for('register') }}">Register as a patient</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
