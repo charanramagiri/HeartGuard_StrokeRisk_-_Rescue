@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Doctors in {{ location }}</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-user-md me-2"></i>
+                Doctors in {{ location }}
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <form action="{{ url_for('doctors_by_location', location=location) }}" method="GET" class="mb-3">
+                        <div class="input-group">
+                            <select class="form-select" id="locationFilter" name="location" onchange="this.form.submit()">
+                                <option value="">Select a different location</option>
+                                {% for city in cities %}
+                                    <option value="{{ city.name }}" {% if city.name == location %}selected{% endif %}>
+                                        {{ city.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-outline-primary" type="submit">Change Location</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <form action="{{ url_for('doctors_by_location', location=location) }}" method="GET">
+                        <div class="input-group">
+                            <select class="form-select" id="specialtyFilter" name="specialty">
+                                <option value="">All Specialties</option>
+                                <option value="Cardiology">Cardiology</option>
+                                <option value="Internal Medicine">Internal Medicine</option>
+                                <option value="Neurology">Neurology</option>
+                                <option value="Endocrinology">Endocrinology</option>
+                                <option value="Family Medicine">Family Medicine</option>
+                                <option value="Vascular Surgery">Vascular Surgery</option>
+                                <option value="Geriatric Medicine">Geriatric Medicine</option>
+                            </select>
+                            <button class="btn btn-outline-primary" type="submit">Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if doctors %}
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for doctor in doctors %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ doctor.name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialty }}</h6>
+                                
+                                {% if doctor.experience %}
+                                <p class="card-text">
+                                    <i class="fas fa-clock me-2"></i>
+                                    {{ doctor.experience }}
+                                </p>
+                                {% endif %}
+                                
+                                {% if doctor.about %}
+                                <p class="card-text text-truncate">{{ doctor.about }}</p>
+                                {% endif %}
+                                
+                                <div class="d-grid mt-3">
+                                    <a href="{{ url_for('doctor_profile', doctor_id=doctor.id) }}" class="btn btn-primary">
+                                        <i class="fas fa-user-md me-2"></i>
+                                        View Profile
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No doctors found in {{ location }}{% if specialty %} with specialty in {{ specialty }}{% endif %}.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>
+            Back
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,130 +1,292 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row justify-content-center mb-4">
-    <div class="col-md-10">
-        <div class="card shadow-sm">
-            <div class="card-header bg-{{ 'danger' if prediction == 'High Risk' else 'success' }} text-white">
-                <h4 class="mb-0">
-                    <i class="fas fa-chart-line me-2"></i>
-                    Your Heart Stroke Risk Assessment Results
-                </h4>
-            </div>
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-4 text-center">
-                        <div class="mb-3">
-                            <span class="display-1 {{ 'text-danger' if prediction == 'High Risk' else 'text-success' }}">
-                                <i class="fas {{ 'fa-exclamation-triangle' if prediction == 'High Risk' else 'fa-check-circle' }}"></i>
-                            </span>
+<div class="container py-4">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-{{ 'danger' if prediction == 'High Risk' else 'success' }} text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Your Heart Stroke Risk Assessment Results
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-4 text-center">
+                            <div class="mb-3">
+                                <span class="display-1 {{ 'text-danger' if prediction == 'High Risk' else 'text-success' }}">
+                                    <i class="fas {{ 'fa-exclamation-triangle' if prediction == 'High Risk' else 'fa-check-circle' }}"></i>
+                                </span>
+                            </div>
+                            <h2 class="fs-3 {{ 'text-danger' if prediction == 'High Risk' else 'text-success' }}">
+                                {{ prediction }}
+                            </h2>
+                            <p class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                {{ health_record.created_at.strftime('%B %d, %Y') }}
+                            </p>
                         </div>
-                        <h2 class="fs-3 {{ 'text-danger' if prediction == 'High Risk' else 'text-success' }}">
-                            {{ prediction }}
-                        </h2>
+                        <div class="col-md-8">
+                            <div class="alert alert-{{ 'danger' if prediction == 'High Risk' else 'success' }} mb-4">
+                                <div class="d-flex">
+                                    <div class="me-3 fs-3">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="alert-heading">Risk Assessment Summary</h5>
+                                        <p class="mb-0">
+                                            {% if prediction == 'High Risk' %}
+                                                Your assessment indicates a <strong>higher risk</strong> for heart stroke. This is not a diagnosis, but we recommend consulting with a healthcare provider as soon as possible.
+                                            {% else %}
+                                                Your assessment indicates a <strong>lower risk</strong> for heart stroke. Continue to maintain healthy habits and regular check-ups with your healthcare provider.
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <p class="mb-2">Based on our predictive model, several factors were considered in determining your risk:</p>
+                            <ul class="mb-0">
+                                {% if health_record.hypertension %}
+                                <li>Your history of <strong>hypertension</strong> is a significant factor</li>
+                                {% endif %}
+                                
+                                {% if health_record.heart_disease %}
+                                <li>Your existing <strong>heart disease</strong> increases risk</li>
+                                {% endif %}
+                                
+                                {% if health_record.glucose_level > 125 %}
+                                <li>Your <strong>glucose level</strong> is elevated</li>
+                                {% endif %}
+                                
+                                {% if health_record.bmi and health_record.bmi > 30 %}
+                                <li>Your <strong>BMI</strong> indicates increased risk</li>
+                                {% endif %}
+                                
+                                {% if health_record.smoking_status == "Current smoker" %}
+                                <li><strong>Smoking</strong> significantly increases your risk</li>
+                                {% endif %}
+                                
+                                {% if health_record.age > 65 %}
+                                <li>Your <strong>age</strong> is a contributing risk factor</li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <h5 class="card-title">Your Assessment Data:</h5>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>Age</th>
-                                    <td>{{ age }} years</td>
-                                </tr>
-                                <tr>
-                                    <th>Hypertension</th>
-                                    <td>{{ "Yes" if hypertension == 1 else "No" }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Glucose Level</th>
-                                    <td>{{ glucose_level }} mg/dL</td>
-                                </tr>
-                            </table>
+                    
+                    <h5 class="border-bottom pb-2 mb-3">Your Assessment Data</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Basic Information</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <th>Gender</th>
+                                        <td>{{ health_record.gender or 'Not specified' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Age</th>
+                                        <td>{{ health_record.age }} years</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Residence Type</th>
+                                        <td>{{ health_record.residence_type or 'Not specified' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Work Type</th>
+                                        <td>{{ health_record.work_type or 'Not specified' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
-                        <div class="alert alert-{{ 'danger' if prediction == 'High Risk' else 'success' }} mt-3">
-                            <i class="fas fa-info-circle me-2"></i>
-                            {% if prediction == 'High Risk' %}
-                                Your assessment indicates a higher risk for heart stroke. This is not a diagnosis, but we recommend consulting with a healthcare provider.
-                            {% else %}
-                                Your assessment indicates a lower risk for heart stroke. Continue to maintain healthy habits and regular check-ups.
-                            {% endif %}
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Health Conditions</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <th>Hypertension</th>
+                                        <td>{% if health_record.hypertension %}Yes{% else %}No{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Heart Disease</th>
+                                        <td>{% if health_record.heart_disease %}Yes{% else %}No{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Smoking Status</th>
+                                        <td>{{ health_record.smoking_status or 'Not specified' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Ever Married</th>
+                                        <td>{{ health_record.ever_married or 'Not specified' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Key Measurements</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <th>Glucose Level</th>
+                                        <td>{{ health_record.glucose_level }} mg/dL</td>
+                                    </tr>
+                                    <tr>
+                                        <th>BMI</th>
+                                        <td>{{ health_record.bmi or 'Not measured' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Resting Blood Pressure</th>
+                                        <td>{{ health_record.resting_bp or 'Not measured' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Cholesterol</th>
+                                        <td>{{ health_record.cholesterol or 'Not measured' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-primary mb-3">Cardiac Specifics</h6>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-sm">
+                                    <tr>
+                                        <th>Chest Pain Type</th>
+                                        <td>{{ health_record.chest_pain_type or 'Not specified' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ECG Results</th>
+                                        <td>{{ health_record.ecg_results or 'Not specified' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Max Heart Rate</th>
+                                        <td>{{ health_record.max_heart_rate or 'Not measured' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Exercise Induced Angina</th>
+                                        <td>{% if health_record.exercise_angina %}Yes{% else %}No{% endif %}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-header bg-info text-white">
-                <h4 class="mb-0">
-                    <i class="fas fa-lightbulb me-2"></i>
-                    Personalized Health Recommendations
-                </h4>
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>
+                        Your Personalized Health Recommendations
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if recommendations %}
+                    <div class="list-group list-group-flush">
+                        {% for recommendation in recommendations %}
+                        <div class="list-group-item">
+                            <div class="d-flex">
+                                <div class="me-3 text-info">
+                                    <i class="fas fa-check-circle fa-lg"></i>
+                                </div>
+                                <div>
+                                    {{ recommendation }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        No personalized recommendations available.
+                    </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-warning mt-3">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div>
+                                <strong>Important:</strong> These recommendations are not a substitute for professional medical advice. Always consult with your doctor before making significant changes to your health routine.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    {% for recommendation in recommendations %}
-                    <li class="list-group-item bg-transparent">
-                        <i class="fas fa-angle-right text-info me-2"></i>
-                        {{ recommendation }}
-                    </li>
-                    {% endfor %}
-                </ul>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-md me-2"></i>
+                        Healthcare Providers Near You
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if nearby_doctors %}
+                    <div class="row row-cols-1 row-cols-md-2 g-4 mb-3">
+                        {% for doctor in nearby_doctors[:4] %}
+                        <div class="col">
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ doctor.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialty }}</h6>
+                                    <p class="card-text mb-2">
+                                        <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                                        {{ doctor.location }}
+                                    </p>
+                                    {% if doctor.experience %}
+                                    <p class="card-text small text-muted mb-2">{{ doctor.experience }} experience</p>
+                                    {% endif %}
+                                    <a href="{{ url_for('doctor_profile', doctor_id=doctor.id) }}" class="btn btn-sm btn-outline-primary d-block mt-2">
+                                        View Profile
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if nearby_doctors|length > 4 %}
+                    <div class="text-center">
+                        <a href="{{ url_for('doctors_by_location', location=session.get('user_location')) }}" class="btn btn-link">
+                            See all {{ nearby_doctors|length }} doctors in your area
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        We couldn't find any healthcare providers in your area. Consider broadening your search or consulting with your primary care physician.
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="col-md-6 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
-                    <i class="fas fa-user-md me-2"></i>
-                    Healthcare Providers Near You
-                </h4>
-            </div>
-            <div class="card-body">
-                {% if nearby_doctors %}
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Doctor Name</th>
-                                <th>Specialty</th>
-                                <th>Location</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for doctor in nearby_doctors %}
-                            <tr>
-                                <td>{{ doctor.name }}</td>
-                                <td>{{ doctor.specialty }}</td>
-                                <td>{{ doctor.location }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    We couldn't find any healthcare providers in your area. Consider broadening your search or consulting with your primary care physician.
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-            <a href="{{ url_for('prediction_form') }}" class="btn btn-outline-primary">
-                <i class="fas fa-redo me-2"></i>
-                Perform Another Assessment
-            </a>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                <a href="{{ url_for('user_dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-home me-2"></i>
+                    Return to Dashboard
+                </a>
+                <a href="{{ url_for('prediction_form') }}" class="btn btn-primary">
+                    <i class="fas fa-redo me-2"></i>
+                    Perform Another Assessment
+                </a>
+            </div>
         </div>
     </div>
 </div>

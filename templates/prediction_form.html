@@ -2,49 +2,256 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Heart Stroke Risk Assessment</h4>
+                <h4 class="mb-0">
+                    <i class="fas fa-heartbeat me-2"></i>
+                    Comprehensive Heart Stroke Risk Assessment
+                </h4>
             </div>
             <div class="card-body">
-                <p class="mb-4">
-                    Please provide accurate information to receive the most precise risk assessment and personalized recommendations.
+                <p class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Please provide accurate information to receive the most precise risk assessment and personalized recommendations. Fields marked with * are required.
                 </p>
+                
                 <form method="POST" action="{{ url_for('prediction_form') }}">
-                    <div class="mb-3">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
-                        <div class="form-text">Enter your current age in years.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Hypertension (High Blood Pressure)</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="hypertension" id="hypertension_yes" value="1" required>
-                            <label class="form-check-label" for="hypertension_yes">
-                                Yes, I have been diagnosed with hypertension
-                            </label>
+                    <!-- Basic Information Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Basic Information</h5>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="hypertension" id="hypertension_no" value="0">
-                            <label class="form-check-label" for="hypertension_no">
-                                No, I don't have hypertension
-                            </label>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="gender" class="form-label">Gender *</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="" selected disabled>Select your gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="age" class="form-label">Age (years) *</label>
+                                    <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="ever_married" class="form-label">Marital Status</label>
+                                    <select class="form-select" id="ever_married" name="ever_married">
+                                        <option value="" selected disabled>Select your marital status</option>
+                                        <option value="Yes">Married</option>
+                                        <option value="No">Never Married</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="residence_type" class="form-label">Residence Type</label>
+                                    <select class="form-select" id="residence_type" name="residence_type">
+                                        <option value="" selected disabled>Select your residence type</option>
+                                        <option value="Urban">Urban</option>
+                                        <option value="Rural">Rural</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="work_type" class="form-label">Work Type</label>
+                                <select class="form-select" id="work_type" name="work_type">
+                                    <option value="" selected disabled>Select your work type</option>
+                                    <option value="Private">Private</option>
+                                    <option value="Self-employed">Self-employed</option>
+                                    <option value="Government">Government</option>
+                                    <option value="Children">Children</option>
+                                    <option value="Never_worked">Never worked</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="glucose_level" class="form-label">Glucose Level (mg/dL)</label>
-                        <input type="number" class="form-control" id="glucose_level" name="glucose_level" min="50" step="0.1" required>
-                        <div class="form-text">
-                            Enter your fasting blood glucose level. Normal range is typically 70-100 mg/dL.
-                            If you don't know your exact level, you can use an estimate based on your most recent test.
+                    
+                    <!-- Medical Conditions Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Medical Conditions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Hypertension (High Blood Pressure) *</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="hypertension" id="hypertension_yes" value="true" required>
+                                        <label class="form-check-label" for="hypertension_yes">
+                                            Yes, I have been diagnosed with hypertension
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="hypertension" id="hypertension_no" value="false">
+                                        <label class="form-check-label" for="hypertension_no">
+                                            No, I don't have hypertension
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Heart Disease</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="heart_disease" id="heart_disease_yes" value="true">
+                                        <label class="form-check-label" for="heart_disease_yes">
+                                            Yes, I have been diagnosed with heart disease
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="heart_disease" id="heart_disease_no" value="false">
+                                        <label class="form-check-label" for="heart_disease_no">
+                                            No, I don't have heart disease
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="smoking_status" class="form-label">Smoking Status</label>
+                                <select class="form-select" id="smoking_status" name="smoking_status">
+                                    <option value="" selected disabled>Select your smoking status</option>
+                                    <option value="Never smoked">Never smoked</option>
+                                    <option value="Former smoker">Former smoker</option>
+                                    <option value="Current smoker">Current smoker</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
+                    
+                    <!-- Health Measurements Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Health Measurements</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="glucose_level" class="form-label">Glucose Level (mg/dL) *</label>
+                                    <input type="number" class="form-control" id="glucose_level" name="glucose_level" min="50" step="0.1" required>
+                                    <div class="form-text">
+                                        Normal fasting range is typically 70-100 mg/dL
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="bmi" class="form-label">BMI (Body Mass Index)</label>
+                                    <input type="number" class="form-control" id="bmi" name="bmi" min="10" max="50" step="0.1">
+                                    <div class="form-text">
+                                        Normal range is 18.5-24.9
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="resting_bp" class="form-label">Resting Blood Pressure (mmHg)</label>
+                                    <input type="number" class="form-control" id="resting_bp" name="resting_bp" min="70" max="250">
+                                    <div class="form-text">
+                                        Systolic pressure (higher number)
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="cholesterol" class="form-label">Total Cholesterol (mg/dL)</label>
+                                    <input type="number" class="form-control" id="cholesterol" name="cholesterol" min="100" max="500">
+                                    <div class="form-text">
+                                        Normal range is below 200 mg/dL
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Cardiac Assessment Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Advanced Cardiac Assessment</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="chest_pain_type" class="form-label">Chest Pain Type</label>
+                                    <select class="form-select" id="chest_pain_type" name="chest_pain_type">
+                                        <option value="" selected disabled>Select chest pain type</option>
+                                        <option value="Typical angina">Typical angina</option>
+                                        <option value="Atypical angina">Atypical angina</option>
+                                        <option value="Non-anginal pain">Non-anginal pain</option>
+                                        <option value="Asymptomatic">Asymptomatic (no pain)</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="fasting_blood_sugar" class="form-label">Fasting Blood Sugar > 120 mg/dl</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="fasting_blood_sugar" id="fasting_blood_sugar_yes" value="true">
+                                        <label class="form-check-label" for="fasting_blood_sugar_yes">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="fasting_blood_sugar" id="fasting_blood_sugar_no" value="false">
+                                        <label class="form-check-label" for="fasting_blood_sugar_no">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="ecg_results" class="form-label">ECG Results</label>
+                                    <select class="form-select" id="ecg_results" name="ecg_results">
+                                        <option value="" selected disabled>Select ECG result</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="ST-T wave abnormality">ST-T wave abnormality</option>
+                                        <option value="Left ventricular hypertrophy">Left ventricular hypertrophy</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="max_heart_rate" class="form-label">Maximum Heart Rate</label>
+                                    <input type="number" class="form-control" id="max_heart_rate" name="max_heart_rate" min="60" max="220">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Exercise Induced Angina</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exercise_angina" id="exercise_angina_yes" value="true">
+                                        <label class="form-check-label" for="exercise_angina_yes">
+                                            Yes
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="exercise_angina" id="exercise_angina_no" value="false">
+                                        <label class="form-check-label" for="exercise_angina_no">
+                                            No
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="oldpeak" class="form-label">ST Depression (Oldpeak)</label>
+                                    <input type="number" class="form-control" id="oldpeak" name="oldpeak" min="0" max="10" step="0.1">
+                                    <div class="form-text">
+                                        ST depression induced by exercise relative to rest
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary btn-lg">
                             <i class="fas fa-heartbeat me-2"></i>
                             Calculate Stroke Risk
                         </button>

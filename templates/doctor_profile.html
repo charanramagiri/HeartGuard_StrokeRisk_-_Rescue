@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('doctors_by_location', location=doctor.location) }}">Doctors in {{ doctor.location }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ doctor.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-md fa-5x text-primary"></i>
+                    </div>
+                    <h2 class="card-title">{{ doctor.name }}</h2>
+                    <p class="card-text text-muted">{{ doctor.specialty }}</p>
+                    <div class="d-flex justify-content-center mb-3">
+                        <span class="badge bg-primary me-2">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {{ doctor.location }}
+                        </span>
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-clock me-1"></i>
+                            {{ doctor.experience or 'Experience not specified' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        About Doctor
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if doctor.about %}
+                        <p>{{ doctor.about }}</p>
+                    {% else %}
+                        <p class="text-muted">No additional information provided.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-hospital me-2"></i>
+                        Clinic Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Address:</h6>
+                            <p>{{ doctor.clinic_address or 'Address not provided' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Contact Information:</h6>
+                            <p>{{ doctor.contact_info or 'Contact information not provided' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-stethoscope me-2"></i>
+                        Specializations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="list-group list-group-flush">
+                                {% if doctor.specialty == "Cardiology" %}
+                                    <li class="list-group-item">Heart disease diagnosis and treatment</li>
+                                    <li class="list-group-item">Coronary artery disease</li>
+                                    <li class="list-group-item">Heart failure management</li>
+                                    <li class="list-group-item">Cardiac rehabilitation</li>
+                                {% elif doctor.specialty == "Neurology" %}
+                                    <li class="list-group-item">Stroke diagnosis and treatment</li>
+                                    <li class="list-group-item">Neurological disorders</li>
+                                    <li class="list-group-item">Headache disorders</li>
+                                    <li class="list-group-item">Movement disorders</li>
+                                {% elif doctor.specialty == "Internal Medicine" %}
+                                    <li class="list-group-item">Preventive medicine</li>
+                                    <li class="list-group-item">Chronic disease management</li>
+                                    <li class="list-group-item">Geriatric care</li>
+                                    <li class="list-group-item">Comprehensive health assessments</li>
+                                {% elif doctor.specialty == "Endocrinology" %}
+                                    <li class="list-group-item">Diabetes management</li>
+                                    <li class="list-group-item">Thyroid disorders</li>
+                                    <li class="list-group-item">Metabolic disorders</li>
+                                    <li class="list-group-item">Hormone imbalances</li>
+                                {% elif doctor.specialty == "Family Medicine" %}
+                                    <li class="list-group-item">Primary care for all ages</li>
+                                    <li class="list-group-item">Preventive medicine</li>
+                                    <li class="list-group-item">Women's health</li>
+                                    <li class="list-group-item">Chronic disease management</li>
+                                {% elif doctor.specialty == "Vascular Surgery" %}
+                                    <li class="list-group-item">Vascular disease treatment</li>
+                                    <li class="list-group-item">Aneurysm repair</li>
+                                    <li class="list-group-item">Carotid artery disease</li>
+                                    <li class="list-group-item">Deep vein thrombosis</li>
+                                {% elif doctor.specialty == "Geriatric Medicine" %}
+                                    <li class="list-group-item">Elderly care</li>
+                                    <li class="list-group-item">Dementia management</li>
+                                    <li class="list-group-item">Fall prevention</li>
+                                    <li class="list-group-item">Medication management</li>
+                                {% else %}
+                                    <li class="list-group-item">{{ doctor.specialty }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>
+            Back
+        </a>
+    </div>
+</div>
+{% endblock %}

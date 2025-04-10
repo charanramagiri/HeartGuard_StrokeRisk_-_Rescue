@@ -1,46 +1,69 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="card bg-info bg-opacity-25">
-            <div class="card-body">
-                <h2 class="card-title">
-                    <i class="fas fa-user-md me-2"></i>
-                    Welcome, Dr. {{ doctor.name }}
-                </h2>
-                <hr>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-square bg-info text-white d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 rounded" style="width: 45px; height: 45px;">
-                                <i class="fas fa-stethoscope"></i>
-                            </div>
-                            <div>
-                                <h3 class="fs-5 mb-0">Specialty</h3>
-                                <p class="mb-0">{{ doctor.specialty }}</p>
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h3 mb-0">
+                        <i class="fas fa-user-md me-2"></i>
+                        Welcome, Dr. {{ doctor.name }}
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center mb-3 mb-md-0">
+                            <div class="display-1 text-primary">
+                                <i class="fas fa-user-md"></i>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-square bg-info text-white d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 rounded" style="width: 45px; height: 45px;">
-                                <i class="fas fa-map-marker-alt"></i>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-square bg-primary text-white d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 rounded" style="width: 45px; height: 45px;">
+                                            <i class="fas fa-stethoscope"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="fs-5 mb-0">Specialty</h3>
+                                            <p class="mb-0">{{ doctor.specialty }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-square bg-primary text-white d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 rounded" style="width: 45px; height: 45px;">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="fs-5 mb-0">Location</h3>
+                                            <p class="mb-0">{{ doctor.location }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-square bg-primary text-white d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 rounded" style="width: 45px; height: 45px;">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="fs-5 mb-0">Experience</h3>
+                                            <p class="mb-0">{{ doctor.experience or 'Not specified' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <h3 class="fs-5 mb-0">Location</h3>
-                                <p class="mb-0">{{ doctor.location }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="icon-square bg-info text-white d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 rounded" style="width: 45px; height: 45px;">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div>
-                                <h3 class="fs-5 mb-0">Visibility</h3>
-                                <p class="mb-0">Visible to users in {{ doctor.location }}</p>
+                            
+                            <div class="mt-3 d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{{ url_for('doctor_profile_edit') }}" class="btn btn-primary">
+                                    <i class="fas fa-edit me-2"></i>
+                                    Edit Profile
+                                </a>
+                                <a href="{{ url_for('doctor_profile', doctor_id=doctor.id) }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-eye me-2"></i>
+                                    View Public Profile
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -48,57 +71,113 @@
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-header bg-dark">
-                <h4 class="mb-0">Services You Provide</h4>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-heartbeat text-danger me-3"></i>
-                        Heart Health Consultations
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-notes-medical text-primary me-3"></i>
-                        Stroke Risk Assessment
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-clipboard-list text-success me-3"></i>
-                        Personalized Health Plans
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-user-clock text-warning me-3"></i>
-                        Follow-up Consultations
-                    </li>
-                </ul>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-id-card me-2"></i>
+                        Your Professional Details
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">About</h5>
+                            <p class="mb-4">{{ doctor.about or 'No information provided. Add details about your practice by clicking "Edit Profile".' }}</p>
+                            
+                            <h5 class="border-bottom pb-2">Contact Information</h5>
+                            <p class="mb-0">{{ doctor.contact_info or 'No contact information provided.' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Clinic Address</h5>
+                            <p class="mb-4">{{ doctor.clinic_address or 'No clinic address provided.' }}</p>
+                            
+                            <h5 class="border-bottom pb-2">Visibility Status</h5>
+                            <p class="mb-0">
+                                <span class="badge bg-success">Active</span>
+                                Your profile is visible to patients in {{ doctor.location }}.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card h-100">
-            <div class="card-header bg-dark">
-                <h4 class="mb-0">HeartGuard Benefits</h4>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-heartbeat me-2"></i>
+                        Services You Provide
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-heartbeat text-danger me-3"></i>
+                            Heart Health Consultations
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-notes-medical text-primary me-3"></i>
+                            Stroke Risk Assessment
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-clipboard-list text-success me-3"></i>
+                            Personalized Health Plans
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-user-clock text-warning me-3"></i>
+                            Follow-up Consultations
+                        </li>
+                        
+                        {% if doctor.specialty == "Cardiology" %}
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-chart-line text-info me-3"></i>
+                            Cardiac Stress Testing
+                        </li>
+                        {% elif doctor.specialty == "Neurology" %}
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-brain text-info me-3"></i>
+                            Neurological Assessments
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-            <div class="card-body">
-                <p>As a registered doctor on HeartGuard, you:</p>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3"></i>
-                        Connect with patients in your area who need specialized care
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3"></i>
-                        Expand your practice with patients concerned about heart health
-                    </li>
-                    <li class="list-group-item bg-transparent d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3"></i>
-                        Be part of a platform dedicated to stroke prevention and awareness
-                    </li>
-                </ul>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-star me-2"></i>
+                        HeartGuard Benefits
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p>As a registered doctor on HeartGuard, you:</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            Connect with patients in your area who need specialized care
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            Expand your practice with patients concerned about heart health
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            Be part of a platform dedicated to stroke prevention and awareness
+                        </li>
+                        <li class="list-group-item d-flex align-items-center">
+                            <i class="fas fa-check-circle text-success me-3"></i>
+                            Customize your profile to highlight your expertise and services
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

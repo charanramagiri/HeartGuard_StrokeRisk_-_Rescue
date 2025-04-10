@@ -30,12 +30,21 @@
                     </li>
                     {% if session.get('user_id') and session.get('user_type') == 'user' %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('prediction_form') }}">Risk Assessment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('user_history') }}">Health History</a>
                     </li>
                     {% endif %}
                     {% if session.get('user_id') and session.get('user_type') == 'doctor' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('doctor_dashboard') }}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('doctor_profile_edit') }}">Edit Profile</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -98,7 +107,7 @@
     <!-- Footer -->
     <footer class="footer py-4 bg-dark text-light mt-5">
         <div class="container text-center">
-            <p>&copy; 2023 HeartGuard: Stroke Risk & Rescue. All rights reserved.</p>
+            <p>&copy; 2025 HeartGuard: Stroke Risk & Rescue. All rights reserved.</p>
         </div>
     </footer>
 

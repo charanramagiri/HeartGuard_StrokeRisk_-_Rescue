@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('doctor_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                <i class="fas fa-edit me-2"></i>
+                Edit Your Professional Profile
+            </h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('doctor_profile_edit') }}">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="specialty" class="form-label">Medical Specialty</label>
+                            <select class="form-select" id="specialty" name="specialty" required>
+                                <option value="" disabled>Select your specialty</option>
+                                {% for specialty in specialties %}
+                                    <option value="{{ specialty }}" {% if doctor.specialty == specialty %}selected{% endif %}>{{ specialty }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="experience" class="form-label">Years of Experience</label>
+                            <input type="text" class="form-control" id="experience" name="experience" value="{{ doctor.experience or '' }}" placeholder="e.g., 15+ years">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <select class="form-select" id="location" name="location" required>
+                                <option value="" disabled>Select your location</option>
+                                {% for city in cities %}
+                                    <option value="{{ city.name }}" {% if doctor.location == city.name %}selected{% endif %}>{{ city.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="clinic_address" class="form-label">Clinic Address</label>
+                            <textarea class="form-control" id="clinic_address" name="clinic_address" rows="3" placeholder="Enter your clinic's full address">{{ doctor.clinic_address or '' }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contact_info" class="form-label">Contact Information</label>
+                            <input type="text" class="form-control" id="contact_info" name="contact_info" value="{{ doctor.contact_info or '' }}" placeholder="e.g., (123) 456-7890 or your-email@example.com">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="about" class="form-label">About Me</label>
+                    <textarea class="form-control" id="about" name="about" rows="5" placeholder="Describe your medical background, expertise, and approach to patient care">{{ doctor.about or '' }}</textarea>
+                    <div class="form-text">This information will be visible to patients looking for doctors in their area.</div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
