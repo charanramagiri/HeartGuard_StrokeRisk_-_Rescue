@@ -1,7 +1,7 @@
 import os
 import joblib
 import numpy as np
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import render_template, request, redirect, url_for, flash, session, make_response
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db, logger, login_manager
@@ -63,6 +63,12 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """User login route"""
+    # Clear any existing session data first
+    logout_user()
+    for key in list(session.keys()):
+        session.pop(key)
+    session.clear()
+    
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -71,6 +77,10 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user and user.check_password(password):
+            # Clear any existing session data again to be extra safe
+            logout_user()
+            session.clear()
+            
             # Log in with Flask-Login
             login_user(user)
             
@@ -84,14 +94,29 @@ def login():
             
             # Check if user has prediction history
             has_predictions = HealthRecord.query.filter_by(user_id=user.id).count() > 0
+            
+            # Create response
             if has_predictions:
-                return redirect(url_for('user_dashboard'))
+                response = redirect(url_for('user_dashboard'))
             else:
-                return redirect(url_for('prediction_form'))
+                response = redirect(url_for('prediction_form'))
+            
+            # Add cache control headers
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
+            
+            return response
         else:
             flash('Invalid email or password', 'danger')
     
-    return render_template('login.html')
+    # For GET requests, return the login template with cache control headers
+    response = make_response(render_template('login.html'))
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/doctor/register', methods=['GET', 'POST'])
 def doctor_register():
@@ -148,6 +173,12 @@ def doctor_register():
 @app.route('/doctor/login', methods=['GET', 'POST'])
 def doctor_login():
     """Doctor login route"""
+    # Clear any existing session data first
+    logout_user()
+    for key in list(session.keys()):
+        session.pop(key)
+    session.clear()
+    
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -156,6 +187,10 @@ def doctor_login():
         doctor = Doctor.query.filter_by(email=email).first()
         
         if doctor and doctor.check_password(password):
+            # Clear any existing session data again to be extra safe
+            logout_user()
+            session.clear()
+            
             # Log in with Flask-Login
             login_user(doctor)
             
@@ -167,21 +202,60 @@ def doctor_login():
             session['user_type'] = 'doctor'
             
             flash(f'Welcome back, Dr. {doctor.name}!', 'success')
-            return redirect(url_for('doctor_dashboard'))
+            
+            # Create response
+            response = redirect(url_for('doctor_dashboard'))
+            
+            # Add cache control headers
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
+            
+            return response
         else:
             flash('Invalid email or password', 'danger')
     
-    return render_template('doctor_login.html')
+    # For GET requests, return the login template with cache control headers
+    response = make_response(render_template('doctor_login.html'))
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/logout')
 @login_required
 def logout():
     """Logout route for both users and doctors"""
-    # Clear session data
+    user_type = session.get('user_type')
+    
+    # Clear Flask-Login session
     logout_user()
+    
+    # Clear all Flask session data
+    for key in list(session.keys()):
+        session.pop(key)
+    
+    # Additional cleanup to ensure session is truly cleared
     session.clear()
+    
+    # Set flash message
     flash('You have been logged out successfully', 'info')
-    return redirect(url_for('index'))
+    
+    # Determine redirect target based on previous user type
+    if user_type == 'doctor':
+        target = url_for('doctor_login')
+    else:
+        target = url_for('login')
+    
+    response = redirect(target)
+    
+    # Add cache control headers to prevent browser caching
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/user/dashboard')
 @login_required
@@ -207,13 +281,21 @@ def user_dashboard():
     # Get all cities for dropdown
     cities = City.query.all()
     
-    return render_template(
+    # Create response with cache control headers
+    response = make_response(render_template(
         'user_dashboard.html',
         health_records=health_records,
         latest_record=latest_record,
         nearby_doctors=nearby_doctors,
         cities=cities
-    )
+    ))
+    
+    # Add cache control headers
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/prediction', methods=['GET', 'POST'])
 @login_required
@@ -332,7 +414,15 @@ def doctor_dashboard():
         flash('Doctor information not found', 'danger')
         return redirect(url_for('doctor_login'))
     
-    return render_template('doctor_dashboard.html', doctor=doctor)
+    # Create response with cache control headers
+    response = make_response(render_template('doctor_dashboard.html', doctor=doctor))
+    
+    # Add cache control headers
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    
+    return response
 
 @app.route('/doctor/profile/edit', methods=['GET', 'POST'])
 @login_required
