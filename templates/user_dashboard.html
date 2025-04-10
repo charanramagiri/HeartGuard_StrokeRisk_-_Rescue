@@ -46,7 +46,7 @@
                     {% if latest_record %}
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <div class="card health-metrics-card">
+                            <div class="card health-metrics-card {% if latest_record.risk_prediction == 'High Risk' %}risk-high{% else %}risk-low{% endif %}">
                                 <div class="card-body">
                                     <h5 class="card-title fw-bold">Risk Assessment</h5>
                                     <div class="d-flex align-items-center mt-3">
