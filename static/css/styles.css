@@ -22,6 +22,43 @@ main {
     font-weight: 500;
 }
 
+/* Health metrics card styling */
+.health-metrics-card {
+    background-color: var(--bs-dark-bg-subtle);
+    border: 1px solid var(--bs-border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.health-metrics-card:hover {
+    transform: translateY(-5px);
+}
+
+.health-metrics-card .card-title {
+    color: var(--bs-primary);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.health-metrics-card .card-body {
+    padding: 20px;
+}
+
+.health-data p {
+    color: var(--bs-body-color);
+    font-size: 1rem;
+}
+
+.health-data .fw-bold {
+    color: var(--bs-emphasis-color);
+}
+
+.assessment-date {
+    color: var(--bs-body-color);
+    opacity: 0.8;
+}
+
 /* Icon styles */
 .icon-square {
     border-radius: 0.75rem;
