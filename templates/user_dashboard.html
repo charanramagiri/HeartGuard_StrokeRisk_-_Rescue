@@ -168,19 +168,39 @@
                     <div class="mb-3">
                         <label for="locationFilter" class="form-label">Filter by location:</label>
                         <form id="locationForm" action="{{ url_for('doctors_by_location', location=session.user_location) }}" method="GET">
-                            <div class="input-group">
-                                <select class="form-select" id="locationFilter" onchange="updateLocationForm(this.value)">
-                                    <option value="{{ session.user_location }}" selected>{{ session.user_location }}</option>
-                                    {% for city in cities %}
-                                        {% if city.name != session.user_location %}
-                                        <option value="{{ city.name }}">{{ city.name }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                <button class="btn btn-outline-primary" type="submit">Find Doctors</button>
+                            <div class="row">
+                                <div class="col-md-8 mb-2">
+                                    <select class="form-select" id="locationSelect" onchange="handleLocationFilter()">
+                                        <option value="{{ session.user_location }}" selected>{{ session.user_location }}</option>
+                                        {% for city in cities %}
+                                            {% if city.name != session.user_location %}
+                                            <option value="{{ city.name }}">{{ city.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <option value="custom">Enter custom location</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <input type="text" class="form-control" id="locationFilter" name="location" value="{{ session.user_location }}" placeholder="Enter location">
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-outline-primary w-100" type="submit">Find Doctors</button>
+                                </div>
                             </div>
                         </form>
                     </div>
+                    <script>
+                    function handleLocationFilter() {
+                        var select = document.getElementById('locationSelect');
+                        var input = document.getElementById('locationFilter');
+                        if (select.value === 'custom') {
+                            input.value = '';
+                            input.focus();
+                        } else {
+                            input.value = select.value;
+                        }
+                    }
+                    </script>
 
                     {% if nearby_doctors %}
                         <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -224,9 +244,5 @@
     </div>
 </div>
 
-<script>
-function updateLocationForm(location) {
-    document.getElementById('locationForm').action = "/doctors/location/" + location;
-}
-</script>
+
 {% endblock %}

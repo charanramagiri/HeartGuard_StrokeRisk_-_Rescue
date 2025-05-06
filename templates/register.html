@@ -34,9 +34,29 @@
                     </div>
                     <div class="mb-3">
                         <label for="location" class="form-label">City/Location</label>
+                        <select class="form-select mb-2" id="locationSelect" onchange="handleLocationChange()">
+                            <option value="" selected>Choose from list or enter custom below</option>
+                            {% for city in cities %}
+                            <option value="{{ city.name }}">{{ city.name }}</option>
+                            {% endfor %}
+                            <option value="custom">My location is not listed</option>
+                        </select>
                         <input type="text" class="form-control" id="location" name="location" required>
                         <div class="form-text">This helps us connect you with healthcare providers in your area.</div>
                     </div>
+                    <script>
+                    function handleLocationChange() {
+                        var select = document.getElementById('locationSelect');
+                        var customInput = document.getElementById('location');
+                        if (select.value === 'custom') {
+                            customInput.value = '';
+                            customInput.placeholder = 'Enter your location';
+                            customInput.focus();
+                        } else if (select.value !== '') {
+                            customInput.value = select.value;
+                        }
+                    }
+                    </script>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">Register</button>
                     </div>

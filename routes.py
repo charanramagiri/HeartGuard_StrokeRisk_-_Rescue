@@ -47,6 +47,12 @@ def register():
         new_user.set_password(password)
         
         try:
+            # Add the user's location to the City table if it doesn't exist
+            existing_city = City.query.filter_by(name=location).first()
+            if not existing_city:
+                new_city = City(name=location)
+                db.session.add(new_city)
+                
             db.session.add(new_user)
             db.session.commit()
             flash('Registration successful! Please login.', 'success')
@@ -154,6 +160,12 @@ def doctor_register():
         new_doctor.set_password(password)
         
         try:
+            # Add the doctor's location to the City table if it doesn't exist
+            existing_city = City.query.filter_by(name=location).first()
+            if not existing_city:
+                new_city = City(name=location)
+                db.session.add(new_city)
+            
             db.session.add(new_doctor)
             db.session.commit()
             flash('Registration successful! Please login.', 'success')
