@@ -23,12 +23,29 @@ app.secret_key = os.environ.get("SESSION_SECRET", "default-secret-key-for-develo
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)  # needed for url_for to generate with https
 
 # Configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///heartguard.db")
+# Try to use PostgreSQL if available, otherwise fall back to SQLite
+try:
+    # Check if we can connect to PostgreSQL
+    import psycopg2
+    database_url = os.environ.get("DATABASE_URL")
+    if database_url:
+        conn = psycopg2.connect(database_url)
+        conn.close()
+        app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+            "pool_recycle": 300,
+            "pool_pre_ping": True,
+        }
+        logger.info("Using PostgreSQL database")
+    else:
+        raise Exception("DATABASE_URL environment variable not set")
+except Exception as e:
+    # Fall back to SQLite
+    logger.warning(f"Could not connect to PostgreSQL: {str(e)}. Falling back to SQLite.")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///heartguard.db"
+    logger.info("Using SQLite database")
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
 # initialize the app with the extension, flask-sqlalchemy >= 3.0.x
 db.init_app(app)
 

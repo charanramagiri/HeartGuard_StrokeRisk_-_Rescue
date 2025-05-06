@@ -24,11 +24,12 @@ main {
 
 /* Health metrics card styling */
 .health-metrics-card {
-    background-color: var(--bs-tertiary-bg);
+    background-color: var(--bs-dark);
     border: 1px solid var(--bs-primary);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease;
     border-radius: 12px;
+    color: var(--bs-light);
 }
 
 .health-metrics-card:hover {
@@ -37,17 +38,18 @@ main {
 }
 
 .health-metrics-card .card-title {
-    color: var(--bs-primary);
-    border-bottom: 1px solid var(--bs-primary);
+    color: var(--bs-info);
+    border-bottom: 1px solid var(--bs-info);
     padding-bottom: 10px;
     margin-bottom: 15px;
+    font-weight: bold;
 }
 
 /* Risk level styling */
 .risk-high {
     border-color: var(--bs-danger);
     border-width: 2px;
-    background-color: rgba(var(--bs-danger-rgb), 0.05);
+    background-color: var(--bs-dark);
 }
 
 .risk-high .card-title {
@@ -58,7 +60,7 @@ main {
 .risk-low {
     border-color: var(--bs-success);
     border-width: 2px;
-    background-color: rgba(var(--bs-success-rgb), 0.05);
+    background-color: var(--bs-dark);
 }
 
 .risk-low .card-title {
@@ -71,17 +73,19 @@ main {
 }
 
 .health-data p {
-    color: var(--bs-body-color);
+    color: var(--bs-light);
     font-size: 1rem;
+    margin-bottom: 10px;
 }
 
 .health-data .fw-bold {
-    color: var(--bs-emphasis-color);
+    color: var(--bs-info);
+    margin-right: 5px;
 }
 
 .assessment-date {
-    color: var(--bs-body-color);
-    opacity: 0.8;
+    color: var(--bs-gray-400);
+    font-style: italic;
 }
 
 /* Icon styles */
