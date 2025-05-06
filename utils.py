@@ -15,41 +15,98 @@ def load_model():
         # Check if model exists, if not create a simple logistic regression model
         model_path = os.path.join('model', 'heart_model.pkl')
         if os.path.exists(model_path):
-            return joblib.load(model_path)
-        else:
-            # Create a simple logistic regression model
-            from sklearn.linear_model import LogisticRegression
-            import numpy as np
-            
-            # Create a simple model with more features
-            # Features: [gender, age, hypertension, heart_disease, married, residence, glucose, bmi, smoking_status]
-            X = np.array([
-                [0, 30, 0, 0, 0, 0, 90, 22, 0],  # Low risk
-                [1, 65, 1, 1, 1, 1, 180, 32, 2],  # High risk
-                [0, 45, 0, 0, 1, 0, 110, 25, 1],  # Low risk
-                [1, 70, 1, 1, 1, 1, 200, 30, 2],  # High risk
-                [0, 50, 0, 0, 1, 0, 120, 26, 1],  # Low risk
-                [1, 55, 1, 0, 1, 1, 160, 28, 2],  # High risk
-            ])
-            y = np.array([0, 1, 0, 1, 0, 1])  # 0: low risk, 1: high risk
-            
-            model = LogisticRegression()
-            model.fit(X, y)
-            
-            # Save the model
-            os.makedirs('model', exist_ok=True)
-            joblib.dump(model, model_path)
-            logger.info(f"Created and saved a new model at {model_path}")
-            return model
+            try:
+                model = joblib.load(model_path)
+                logger.info(f"Successfully loaded model from {model_path}")
+                return model
+            except Exception as e:
+                logger.error(f"Error loading existing model: {e}")
+                # If we can't load the existing model, create a new one
+                os.remove(model_path)  # Remove corrupted model file
+                logger.info(f"Removed corrupted model file, will create a new one")
+                # Continue to model creation below
+        
+        # Create a simple logistic regression model
+        from sklearn.linear_model import LogisticRegression
+        import numpy as np
+        
+        logger.info("Creating new prediction model")
+        # Create a simple model with more features
+        # Features: [gender, age, hypertension, heart_disease, married, residence, glucose, bmi, smoking_status]
+        X = np.array([
+            [0, 30, 0, 0, 0, 0, 90, 22, 0],  # Low risk
+            [1, 65, 1, 1, 1, 1, 180, 32, 2],  # High risk
+            [0, 45, 0, 0, 1, 0, 110, 25, 1],  # Low risk
+            [1, 70, 1, 1, 1, 1, 200, 30, 2],  # High risk
+            [0, 50, 0, 0, 1, 0, 120, 26, 1],  # Low risk
+            [1, 55, 1, 0, 1, 1, 160, 28, 2],  # High risk
+        ])
+        y = np.array([0, 1, 0, 1, 0, 1])  # 0: low risk, 1: high risk
+        
+        model = LogisticRegression()
+        model.fit(X, y)
+        
+        # Save the model
+        os.makedirs('model', exist_ok=True)
+        joblib.dump(model, model_path)
+        logger.info(f"Created and saved a new model at {model_path}")
+        return model
     except Exception as e:
-        logger.error(f"Error loading model: {e}")
-        # Return a fallback model that always predicts low risk
-        return DummyModel()
+        logger.error(f"Error in model creation/loading: {e}")
+        # Return a more realistic fallback model
+        return ImprovedDummyModel()
 
 class DummyModel:
     """Fallback model that always predicts low risk"""
     def predict(self, X):
         return [0]  # Always return low risk
+        
+class ImprovedDummyModel:
+    """Improved fallback model that makes predictions based on key risk factors"""
+    def predict(self, X):
+        # Extract key features from X
+        # Features: [gender, age, hypertension, heart_disease, married, residence, glucose, bmi, smoking_status]
+        try:
+            features = X[0]  # Get the first (and only) sample's features
+            
+            # Count risk factors
+            risk_score = 0
+            
+            # Age over 60 is a risk factor
+            if features[1] >= 60:
+                risk_score += 2
+            elif features[1] >= 50:
+                risk_score += 1
+                
+            # Hypertension is a risk factor
+            if features[2] == 1:
+                risk_score += 2
+                
+            # Heart disease is a risk factor
+            if features[3] == 1:
+                risk_score += 2
+                
+            # High glucose level is a risk factor
+            if features[6] >= 160:
+                risk_score += 2
+            elif features[6] >= 120:
+                risk_score += 1
+                
+            # High BMI is a risk factor
+            if features[7] >= 30:
+                risk_score += 1
+                
+            # Smoking is a risk factor
+            if features[8] == 2:  # Current smoker
+                risk_score += 1
+                
+            # Determine risk based on score
+            # High risk if 3 or more risk factors
+            return [1 if risk_score >= 3 else 0]
+        except Exception as e:
+            logger.error(f"Error in ImprovedDummyModel: {e}")
+            # If anything goes wrong, return low risk
+            return [0]
 
 def get_health_recommendations(record):
     """Generate personalized health recommendations based on input data"""
