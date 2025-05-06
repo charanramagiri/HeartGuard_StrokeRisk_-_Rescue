@@ -470,7 +470,17 @@ def doctor_profile_edit():
         doctor.location = location
         
         try:
+            # Add location to the City table if it doesn't exist
+            existing_city = City.query.filter_by(name=location).first()
+            if not existing_city:
+                new_city = City(name=location)
+                db.session.add(new_city)
+                
             db.session.commit()
+            
+            # Update session with new location
+            session['user_location'] = location
+            
             flash('Profile updated successfully', 'success')
             return redirect(url_for('doctor_dashboard'))
         except Exception as e:
@@ -501,7 +511,23 @@ def user_history():
 @app.route('/doctors/location/<location>')
 def doctors_by_location(location):
     """Show doctors by location"""
+    # Check if location comes from GET parameter instead of URL path
+    location_param = request.args.get('location')
+    if location_param:
+        return redirect(url_for('doctors_by_location', location=location_param))
+    
     specialty = request.args.get('specialty')
+    
+    # Add location to City table if it doesn't exist
+    try:
+        existing_city = City.query.filter_by(name=location).first()
+        if not existing_city:
+            new_city = City(name=location)
+            db.session.add(new_city)
+            db.session.commit()
+    except Exception as e:
+        logger.error(f"Error adding location to city table: {str(e)}")
+        # Continue anyway - this is not critical
     
     # Base query
     query = Doctor.query.filter_by(location=location)
